@@ -25,7 +25,7 @@ public class FileProcessScheduler {
 
     static final String FILE_NAME = "Test Process_14122021.csv"; // --> admin/super_admin --> todo --> in_process  --> completed
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0/5 * * * ?")
     public void processFile() {
         System.out.println("**** STARTED PROCESS FILE *****");
 
@@ -55,7 +55,7 @@ public class FileProcessScheduler {
                 incidents.add(incident);
             }
 
-            incidentRepository.saveAll(incidents);
+            incidents.forEach(incident -> incidentRepository.save(incident)); // use spring-batch to insert all records.
 
             System.out.println("**** COMPLETED PROCESS FILE *****");
 
