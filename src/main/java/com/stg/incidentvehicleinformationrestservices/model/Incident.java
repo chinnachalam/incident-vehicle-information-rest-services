@@ -27,5 +27,4 @@ public class Incident {
     private String partmemo;
     private String codedBy;
     private String fieldInv;
-
 }

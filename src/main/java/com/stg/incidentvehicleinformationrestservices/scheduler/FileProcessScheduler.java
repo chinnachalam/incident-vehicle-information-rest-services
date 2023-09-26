@@ -23,11 +23,13 @@ public class FileProcessScheduler {
     @Autowired
     private IncidentRepository incidentRepository;
 
-    static final String FILE_NAME = "Test Process_14122021.csv";
+    static final String FILE_NAME = "Test Process_14122021.csv"; // --> admin/super_admin --> todo --> in_process  --> completed
 
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void processFile() {
         System.out.println("**** STARTED PROCESS FILE *****");
+
+        // read from todo --> in_process
 
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_NAME)));
              CSVParser csvParser = new CSVParser(bufferedReader,
@@ -52,10 +54,12 @@ public class FileProcessScheduler {
                 incident.setFieldInv(csvRecord.get("FIELD_INV"));
                 incidents.add(incident);
             }
-            incidents.forEach(incident -> incidentRepository.save(incident));
+
+            incidentRepository.saveAll(incidents);
 
             System.out.println("**** COMPLETED PROCESS FILE *****");
 
+            // move file to completed
         } catch (Exception e) {
             System.out.println("fail to parse CSV file: " + e.getMessage());
         }
